@@ -43,8 +43,7 @@ int main(void)
 {
     // Se setea oscilador externo de 16MHz
     SysCtlClockSet(
-            SYSCTL_SYSDIV_1 | SYSCTL_USE_OSC | SYSCTL_OSC_MAIN
-                    | SYSCTL_XTAL_16MHZ);  //16MHz
+            SYSCTL_SYSDIV_1 | SYSCTL_USE_OSC | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);  //16MHz
 
     // Se asigna reloj a puerto F
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
@@ -66,15 +65,14 @@ int main(void)
     GPIOIntDisable(GPIO_PORTF_BASE, GPIO_PIN_4);
     GPIOIntClear(GPIO_PORTF_BASE, GPIO_PIN_4);
     GPIOIntRegister(GPIO_PORTF_BASE, Button);
-    GPIOIntTypeSet(GPIO_PORTF_BASE, GPIO_PIN_4,
-                   GPIO_LOW_LEVEL);
+    GPIOIntTypeSet(GPIO_PORTF_BASE, GPIO_PIN_4, GPIO_LOW_LEVEL);
     GPIOIntEnable(GPIO_PORTF_BASE, GPIO_PIN_4);
    //**********************************************************************************************************
    // Loop Principal
    //**********************************************************************************************************
    while (1)
     {
-        // Se encienden la led roja porque se está utilizando la máscara y el mismo valor  GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3
+        // Se enciende la led roja
         GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3,
         GPIO_PIN_1 | 0);
 
@@ -84,24 +82,24 @@ int main(void)
             //delay(1500);
             SysCtlDelay(8000000);
 
-            for (n = 0; n < 5; n++)
+            for (n = 0; n < 3; n++) //Parpadeo 3 veces
                {
-                   // Se encienden todos los pines porque se está utilizando la máscara y el mismo valor  GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3
+                   // Se apagan todos los pines
                    GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, 0);
                    //delay(500);
                    SysCtlDelay(2666666);
 
-                   // Se encienden todos los pines porque se está utilizando la máscara y el mismo valor  GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3
+                   // Se encienden la led verde
                    GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3, GPIO_PIN_3 | 0);
                    //delay(500);
                    SysCtlDelay(2666666);
                }
-
+            //Se enciende la led amarilla
             GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3,
             GPIO_PIN_1 |GPIO_PIN_3 | 0);
             //delay(1500);
             SysCtlDelay(8000000);
-            flag = 0;
+            flag = 0; //Se limpia la bandera
         }
 
     }
@@ -110,8 +108,8 @@ int main(void)
 // Función para hacer debounce
 //**************************************************************************************************************
 void Button(void){
-    if (GPIOIntStatus(GPIO_PORTF_BASE, false) & GPIO_PIN_4) {
-        flag = 1;
+    if (GPIOIntStatus(GPIO_PORTF_BASE, false) & GPIO_PIN_4) { //Sucede la interrupcion
+        flag = 1; //Se enciende la bandera
     }
 }
 
