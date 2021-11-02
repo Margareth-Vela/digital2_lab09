@@ -44,11 +44,12 @@ int main(void)
     // Se habilita el reloj para el temporizador
     SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
 
-    // Configuración del Timer 0 como temporizador períodico
+    // Configuración del Timer 0 como temporizador periodico
     TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
 
-    // Se calcula el período para el temporizador (1 seg)
+    // Se calcula el período para el temporizador (1 seg - 50% duty cycle)
     ui32Period = (SysCtlClockGet()) / 2;
+
     // Establecer el periodo del temporizador
     TimerLoadSet(TIMER0_BASE, TIMER_A, ui32Period - 1);
 
@@ -72,10 +73,9 @@ int main(void)
 //**************************************************************************************************************
 void Timer0IntHandler(void)
 {
-    // Clear the timer interrupt
+    //Limpia la interrupcion
     TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
-    // Read the current state of the GPIO pin and
-    // write back the opposite state
+    //Toggle del led verde
     if (GPIOPinRead(GPIO_PORTF_BASE, GPIO_PIN_3))
     {
         GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, 0);
